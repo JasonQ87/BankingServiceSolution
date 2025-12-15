@@ -24,11 +24,11 @@ namespace BankingServiceApp
 
     internal class SavingAccount : BankAccount
     {
-        protected override void Deposit(decimal amount)
+        public override void Deposit(decimal amount)
         {
             this.Balance += amount;
         }
-        protected override void Withdraw(decimal amount)
+        public override void Withdraw(decimal amount)
         {
             Console.WriteLine("Saving Account Child class Withdraw");
             this.Balance -= amount;
@@ -37,13 +37,14 @@ namespace BankingServiceApp
 
     internal class CurrentAccount : BankAccount
     {
-        protected override void Deposit(decimal amount)
+        public override void Deposit(decimal amount)
         {
             this.Balance += amount;
         }
-        protected override void Withdraw(decimal amount)
+        public override void Withdraw(decimal amount)
         {
             Console.WriteLine("Current Account Child class Withdraw");
             this.Balance -= amount;
         }
     }
+}

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankingServiceApp
 {
-    public class Employee()
+    public Employee()
     {
         this.Id = 4;
     }
@@ -18,5 +18,4 @@ namespace BankingServiceApp
 
 
     // Methods (Behavior)
-}
 }
