@@ -1,7 +1,6 @@
 ﻿
 using ConsoleTables;
-using static BankingServiceApp.BankAccount;
-using static System.Formats.Asn1.AsnWriter;
+using System.Runtime.CompilerServices;
 
 namespace BankingServiceApp
 {
@@ -36,8 +35,15 @@ namespace BankingServiceApp
                 Console.WriteLine("7. Display All Accounts");
                 Console.WriteLine("8. Display All Transactions");
                 Console.WriteLine(decorativeLine);
-                Console.WriteLine("9. Exit");
-                Console.Write("Please select an option (1-9): ");
+                Console.WriteLine("9. Add New Appointment");
+                Console.WriteLine("10. ServeNextAppointment");
+                Console.WriteLine("11. Display All Appointments");
+                Console.WriteLine(decorativeLine);
+                Console.WriteLine("12. Add New Loan Request");
+                Console.WriteLine("13. Display All Loan Requests");
+                Console.WriteLine(decorativeLine);
+                Console.WriteLine("14. Exit");
+                Console.Write("Please select an option (1-14): ");
                 try
                 {
                     /////for demonstration purpose only
@@ -72,6 +78,21 @@ namespace BankingServiceApp
                             DispalyAllTransactions();
                             break;
                         case 9:
+                            AddNewAppointment();
+                            break;
+                        case 10:
+                            ServeNextAppointment();
+                            break;
+                        case 11:
+                            GetAllAppointments();
+                            break;
+                        case 12:
+                            AddNewLoanRequest();
+                            break;
+                        case 13:
+                            DisplayLoanRequests();
+                            break;
+                        case 14:
 
                             Console.WriteLine("Goodbye!");
                             Environment.Exit(0);
@@ -117,6 +138,9 @@ namespace BankingServiceApp
             #endregion
 
         }
+
+
+
 
 
         #region Customers Operations
@@ -282,6 +306,8 @@ namespace BankingServiceApp
             ba.Deposit(200);
             ba.Withdraw(300);
             ba.Deposit(100);
+
+            // foreach enumerate a stack without modifying it. it does not pop elements.
             foreach (BankTransaction tran in ba.HistoryOfTransactions)
             {
                 Console.WriteLine("=====================================");
@@ -291,15 +317,123 @@ namespace BankingServiceApp
                 Console.WriteLine($"Balance After Transaction: {tran.BalanceAfterTransaction}");
                 Console.WriteLine("=====================================");
             }
+
         }
+
+        #endregion
+
+        #region Appointment Operations
+        private static void AddNewAppointment()
+        {
+
+
+            //TODO: Ask user for Customer Name/ID
+            //TODO: Ask user for Employee Name/ID
+
+            Console.Write("Enter Appointment Purpose: ");
+            string purpose = Console.ReadLine();
+
+            Console.Write("Please Enter Date (yyyy-mm-dd): ");
+            string appDate = Console.ReadLine();
+
+            Console.Write("Please Enter Time  (HH:mm): ");
+            string appTime = Console.ReadLine();
+
+
+            Appointment newAppointment =
+                new(bankService.GetAllAppointments().Count + 1)
+                {
+                    Customer = new Customer(1) { Name = "Emad" },
+                    Employee = new Employee(1) { Name = "Bill" },
+                    AppointmentDate = DateTime.Parse($"{appDate} {appTime}"),
+                    Purpose = purpose,
+                    Status = AppointmentStatus.Opened
+                };
+
+            bankService.AddAppointment(newAppointment);
+
+            Console.WriteLine("Done Adding New Appointment");
+
+        }
+        private static void GetAllAppointments()
+        {
+            Console.WriteLine("===========================================");
+            Console.WriteLine("Appointment List");
+            Console.WriteLine("===========================================");
+            foreach (Appointment app in bankService.GetAllAppointments())
+            {
+
+                Console.WriteLine($"Appointment ID: {app.AppointmentID}");
+                Console.WriteLine($"Appointment Date: {app.AppointmentDate}");
+                Console.WriteLine($"Customer Name: {app.Customer.Name}");
+                Console.WriteLine($"Employee Name: {app.Employee.Name}");
+                Console.WriteLine($"Purpose: {app.Purpose}");
+                Console.WriteLine($"Appointment Status: {app.Status}");
+                Console.WriteLine("=====================================");
+            }
+
+        }
+
+        private static void ServeNextAppointment()
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 
 
 
+        #region Loan Request Operations
 
 
+        private static void AddNewLoanRequest()
+        {
+            //ask user for customer ID, search for customer , get customer object
+            //ask user for customer ID, search for CurrentAccount , get CurrentAccount object
 
+            LoanRequest request1 = new LoanRequest(1)
+            {
+                CurrentAccount = new CurrentAccount(1000, 1, 1),
+                Customer = new Customer(1),
+                RequestDate = DateTime.Now,
+                RequestedAmount = 500,
+            };
+            Console.WriteLine("Done Adding First Request");
+
+            LoanRequest request2 = new LoanRequest(2)
+            {
+                CurrentAccount = new CurrentAccount(2000, 1, 1),
+                Customer = new Customer(1),
+                RequestDate = DateTime.Now.AddHours(1),
+                RequestedAmount = 300,
+
+            };
+            Console.WriteLine("Done Adding Second Request");
+
+            bankService.AddLoanRequest(request1);
+            bankService.AddLoanRequest(request2);
+        }
+        private static void DisplayLoanRequests()
+        {
+
+            Console.WriteLine("===========================================");
+            Console.WriteLine("Loand Request List");
+            Console.WriteLine("===========================================");
+            foreach (LoanRequest request in bankService.GetloanRequests())
+
+            {
+
+                Console.WriteLine($"Request ID: {request.RequestID}");
+                Console.WriteLine($"Current Account Balance: {request.CurrentAccount.Balance}");
+                Console.WriteLine($"Customer Name: {request.Customer.Name}");
+                Console.WriteLine($"Requested Date: {request.RequestDate}");
+                Console.WriteLine($"Requested Amount: {request.RequestedAmount}");
+                Console.WriteLine("=====================================");
+            }
+
+        }
+        #endregion  
 
 
 
